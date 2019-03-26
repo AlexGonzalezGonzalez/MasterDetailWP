@@ -45,7 +45,7 @@ class PostListActivity : AppCompatActivity() {
         toolbar.title = title
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "jaja xd", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
 
@@ -57,19 +57,21 @@ class PostListActivity : AppCompatActivity() {
             twoPane = true
         }
         var respuesta = ""
+        //ejecutamos una imagen para que este mientras se procesa la peticion a wp
         waiting.visibility=VISIBLE
-
+        //Comenzamos la courutina
         doAsync {
             try {
-
-                respuesta = URL("http://50.112.179.61/wp5/?rest_route=/wp/v2/posts/").readText()
+                //Hacemos la peticion
+                respuesta = URL("http://34.217.136.84/wp5/?rest_route=/wp/v2/posts/").readText()
+                //La recogemos en un array
                 val array: JSONArray = JSONArray(respuesta)
 
                 DummyContent.ITEMS = ArrayList()
                 DummyContent.ITEM_MAP= HashMap()
 
 
-
+                //Para cada post recogemos el titulo y su contenido
                 for (i in 0 until array.length()) {
 
                     DummyContent.addItem(DummyContent.DummyItem(array.getJSONObject(i).get("id").toString(),
@@ -77,6 +79,7 @@ class PostListActivity : AppCompatActivity() {
                             array.getJSONObject(i).getJSONObject("content").getString("rendered")))
 
                 }
+                //En el UI thread hacemos invisible la imagen de espera y mostramos la lista de los post
                 uiThread {
                     waiting.visibility=INVISIBLE
                     setupRecyclerView(post_list)
